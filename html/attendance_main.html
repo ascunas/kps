@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>근태신청 메인</title>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+
+<script type="text/javascript" src="../js/jquery-3.7.1.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/lib/gridjs.umd.js"></script>
+<script type="text/javascript" src="../js/lib/chart.js"></script>
+<script type="text/javascript" src="../js/lib/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../js/lib/bootstrap-datepicker.ko.min.js"></script>
+<script type="text/javascript" src="../js/lib/select2.min.js"></script>
+
+<link type="text/css" rel="stylesheet" href="../css/common.css" />
+<link type="text/css" rel="stylesheet" href="../css/mermaid.min.css" />
+<link type="text/css" rel="stylesheet" href="../css/bootstrap-datepicker3.css" />
+<link type="text/css" rel="stylesheet" href="../css/select2.min.css" />
+<link type="text/css" rel="stylesheet" href="../css/style.css" />
+<script type="text/javascript">
+//<![CDATA[
+/* Publishing-Div current page scripts... */
+
+jQuery(function() {
+	var $ = jQuery;
+
+    $('.input-daterange').datepicker({
+        format: "yyyy.mm.dd",
+        language: "ko",
+        forceParse: false,
+        autoclose: true,
+        todayHighlight: true,
+        orientation: 'bottom',
+        widgetPositioning: { horizontal: 'auto', vertical: 'auto' }
+    });
+    
+    $(document).ready(function() {
+
+        // 빈 데이터 예제
+        const emptyData = [];
+
+        // grid.js 초기화
+        new gridjs.Grid({
+            columns: ["번호", "이름", "부서", "직급"],
+            data: emptyData,
+            search: false,
+            pagination: false,
+            sort: false,
+            language: {
+                noRecordsFound: "데이터가 없습니다.",   // 데이터 없을 때 표시 문구
+            }
+        }).render(document.getElementById("emptyGrid"));
+
+        
+        // 신청내역 그리드
+        const sampleData = [
+            ["기안", "신규", "연차", "2025.10.10~2025.10.13", "16시간", true, "개인사정", "홍길동", "김팀장", "2025.10.13", "12345678"],
+            ["저장", "변경후", "연차(오후)", "2025.10.10 14:00~18:00", "4시간", true, "개인사정", "이영희", "박부장", "2025.10.13", "87654321"],
+            ["결재", "변경전", "연차(오전)", "2025.10.10 09:00~14:00", "4시간", true, "개인사정", "이영희", "박부장", "2025.10.13", "87654321"],
+            ["결재", "취소", "경조휴가(배우자 외조부상)", "2025.10.13~2025.10.15", "3일", true, "가족경조사", "박지훈", "김팀장", "2025.10.13", "45671234"],
+            ["반려", "신규", "병가", "2025.10.15", "8시간", false, "독감", "최민수", "이부장", "2025.10.13", "78945612"],
+            ["완료", "신규", "병가", "2025.10.15", "8시간", true, "감기", "김하늘", "박팀장", "2025.10.14", "11223344"]
+        ];
+
+        // 상태 → 라벨 HTML
+        function renderStatusLabel(status) {
+            const map = {
+                "기안": "status-draft",
+                "결재": "status-approved",
+                "반려": "status-rejected",                
+                "저장": "status-saved",
+                "완료": "status-completed",
+            };
+            const cls = map[status] || "status-draft";
+            return gridjs.html(`<span class="status-label ${cls}">${status}</span>`);
+        }
+
+        // 첨부파일 아이콘
+        function renderFileIcon(hasFile) {
+            return hasFile ? gridjs.html(`<span class="file-icon">📎</span>`) : "";
+        }
+
+        // 근태유형 → 상세페이지 링크
+        function renderDetailLink(cell, rowIndex) {
+            const detailUrl = `/attendance-detail.html?id=${rowIndex + 1}`;
+            return gridjs.html(`<a href="${detailUrl}" class="detail-link">${cell}</a>`);
+        }
+
+        // 모든 셀에 div 래핑
+        function wrapInDiv(cell) {
+            const content = cell !== null && cell !== undefined ? cell.toString() : '';
+            return gridjs.html(`<div class="cell-wrapper">${content}</div>`);
+        }
+
+        // Grid.js 초기화
+        new gridjs.Grid({
+            columns: [
+                {
+                    name: "상태",
+                    formatter: (cell) => renderStatusLabel(cell),
+                    width: "80px",
+                    attributes: {
+                        class: "status-cell"
+                    }
+                },
+                {
+                    name: "구분",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "근태유형",
+                    formatter: (cell, row, index) => renderDetailLink(cell, index),
+                    attributes: {
+                        style: "text-align: left;"
+                    }
+                },
+                {
+                    name: "근태기간",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "일/시간",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "첨부파일",
+                    formatter: (cell) => renderFileIcon(cell),
+                    width: "90px"
+                },
+                {
+                    name: "근태사유",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "신청자",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "결재자",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "결재일",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "결재번호",
+                    formatter: (cell) => wrapInDiv(cell)
+                }
+            ],
+            data: sampleData,
+            //search: {
+            //    enabled: true
+            //},
+            sort: true,
+            //pagination: {
+                //enabled: true,
+                //limit: 5,
+                //summary: true
+            //},
+            resizable: true,
+            autoWidth: true,
+            
+            language: {
+            noRecordsFound: "데이터가 없습니다.",   // 데이터 없을 때 표시 문구
+            },
+            className: {
+                table: 'my-custom-table',
+                thead: 'my-thead',
+                tbody: 'my-tbody',
+                container: 'my-grid-wrap'
+            }
+        }).render(document.getElementById("attendanceGrid"));
+
+
+        // 공통 셀 래퍼 함수
+        function wrapCell(content) {
+            return gridjs.html(`<div class="cell-wrapper">${content ?? ""}</div>`);
+        }
+
+        // 연차쿼터 상세 데이터
+        const annualData = [
+            ["당해연차", "2024.11.19", "2028.11.18", "184.00", "0.00", "184.00"],
+            ["이월연차", "2024.11.19", "2028.11.18", "176.00", "88.00", "88.00"],
+            ["이월연차", "2024.11.19", "2028.11.18", "176.00", "176.00", "0.00"],
+            ["이월연차", "2024.11.19", "2028.11.18", "176.00", "176.00", "0.00"],
+            ["", "", "소계", "712.00", "440.00", "272.00"],
+            ["선사용", "2024.11.19", "2028.11.18", "80.00", "0.00", "80.00"],
+            ["", "", "합계", "792.00", "440.00", "352.00"]
+        ];
+
+        // Grid 생성
+        const grid = new gridjs.Grid({
+            columns: [
+            { name: "구분", formatter: (cell) => wrapCell(cell) },
+            { name: "생성일", formatter: (cell) => wrapCell(cell) },
+            { name: "소멸일", formatter: (cell) => wrapCell(cell) },
+            { name: "발생", formatter: (cell) => wrapCell(cell), attributes: { style: "text-align:right;" } },
+            { name: "사용", formatter: (cell) => wrapCell(cell), attributes: { style: "text-align:right;" } },
+            { name: "잔여", formatter: (cell) => wrapCell(cell), attributes: { style: "text-align:right;" } }
+            ],
+            data: annualData,
+            sort: false,
+            search: false,
+            pagination: false
+        }).render(document.getElementById("annualGrid"));
+
+        // Grid 렌더 완료 후 행별 class 부여
+        setTimeout(() => {
+            const rows = document.querySelectorAll("#annualGrid table tbody tr");
+            rows.forEach((row) => {
+            const cells = row.querySelectorAll("td");
+            if (!cells.length) return;
+            const label = cells[2]?.textContent?.trim();
+            if (label === "소계") {
+                row.classList.add("subtotal-row");
+            } else if (label === "합계") {
+                row.classList.add("total-row");
+            }
+            });
+        }, 300);
+    });
+
+    
+    
+    // 연차쿼터 도우넛 챠트
+    const ctx = $('#myDoughnutChart')[0].getContext('2d');
+
+    const chartOptions = {
+        layout: {
+            padding: {
+                top: 15,
+                bottom: 15
+            }
+        }
+    };
+
+    const myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['발생', '사용', '잔여'],
+            datasets: [{
+                label: '연차쿼터',
+                data: [300, 50, 100],
+                pointStyle: 'rect',
+                backgroundColor: [
+                    'rgba(12, 77, 162, 0.8)',
+                    'rgba(141, 182, 244, 0.8)',
+                    'rgba(223, 236, 253, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(12, 77, 162, 1)',
+                    'rgba(141, 182, 244, 1)',
+                    'rgba(223, 236, 253, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "82%",
+            plugins: {
+                tooltip: {
+                    backgroundColor: "#000",
+                    bodyColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    padding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#000',
+                        padding: 20,
+                        boxWidth: 10,
+                        boxHeight: 10,
+                        font: {
+                            family: 'Pretendard',
+                            size: 14,
+                            weight: '500'
+                        }
+                    },
+                },
+                title: {
+                    display: false,
+                    text: '도넛 차트 예제'
+                }
+            },
+            layout: {
+                padding: {
+                    top: 0,
+                    bottom: 0
+                }
+            }
+        }
+    });
+
+});
+
+</script>
+</head>
+<body>
+<div class="content-page">
+    <div class="page-header">
+        <h2 class="">근태신청</h2>
+        <div class="breadcrumbs">
+            <ul>
+                <li class="first">홈</li>
+                <li>ESS</li>
+                <li>근무/근태</li>
+                <li class="current">근태신청</li>
+            </ul>
+        </div>
+    </div>
+    <div class="page-layout grid">
+        <div class="box open-modal-btn" data-target="modal1111">
+            <div class="header">
+                <div class="title">
+                    <h3>연차쿼터</h3>
+                    <span class="unit">연차기산일 2025.10.25</span>
+                </div>
+                <span class="unit">발생 / 사용 / 잔여</span>
+            </div>
+            <div class="body">
+                <div class="body-wrap">
+                    <div class="" style="width: 55%">
+                        <canvas id="myDoughnutChart" style="display: block; box-sizing: border-box; height: 50%; width: 50%;"></canvas>
+                    </div>
+                    <div class="progress-con">
+                        <div class="progress">
+                            <span class="label">당해</span>
+                            <div class="progress-wrap type1">
+                                <div class="progress-bar" style="width: 85%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress">
+                            <span class="label">이월</span>
+                            <div class="progress-wrap type1">
+                                <div class="progress-bar" style="width: 45%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress">
+                            <span class="label">선사용</span>
+                            <div class="progress-wrap type1">
+                                <div class="progress-bar" style="width: 0%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="header">
+                <div class="title">
+                    <h3>기타 휴가쿼터</h3>
+                    <span class="unit">좌측 : 시간, 우측 : 일</span>
+                </div>
+                <span class="unit">발생 / 사용 / 잔여</span>
+            </div>
+            <div class="body-wrap">
+                <div class="progress-con">
+                    <div class="progress">
+                        <div>
+                            <span class="label">질병</span>
+                            <div class="progress-wrap type2">
+                                <div class="progress-bar" style="width: 25%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <div>
+                            <span class="label">자녀</span>
+                            <div class="progress-wrap type2">
+                                <div class="progress-bar" style="width: 70%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <div>
+                            <span class="label">헌혈</span>
+                            <div class="progress-wrap type">
+                                <div class="progress-bar" style="width: 10%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-con">
+                    <div class="progress">
+                        <div>
+                            <span class="label">육아</span>
+                            <div class="progress-wrap type3">
+                                <div class="progress-bar" style="width: 50%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <div>
+                            <span class="label">난임</span>
+                            <div class="progress-wrap type3">
+                                <div class="progress-bar" style="width: 25%"></div>
+                                <div class="progress-data">
+                                    <span>10</span>
+                                    <span>20</span>
+                                    <span>30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <div style="display: none;"><!-- div 추가 됐습니다. 삭제시 여기 div를 숨김처리 -->
+                            <span class="label">가족</span>
+                            <div class="progress-wrap type3">
+                                <div class="progress-bar" style="width: 25%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" style="grid-column: span 2; ">
+            <div class="body">
+                <div class="form-wrap">
+                    <div class="form-grid-search">
+                        <div class="form">
+                            <span class="label">신청일</span>
+                            <span>
+                                <div class="input-daterange input-group datepicker-wrap" id="">
+                                    <input type="text" class="input-sm form-control" name="" />
+                                    <span class="input-group-addon">~</span>
+                                    <input type="text" class="input-sm form-control" name="" />
+                                </div>
+                            </span>
+                            <span class="label">휴무유형</span> 
+                            <span>
+                                <div class="form-group select-custom" style="width: ;">
+                                    <select id="" class="fn-select js-basic-single">
+                                        <option value="">선택하세요</option>
+                                        <option value="seoul">서울</option>
+                                        <option value="busan">부산</option>
+                                        <option value="incheon">인천</option>
+                                        <option value="daegu">대구</option>
+                                        <option value="daejeon">대전</option>
+                                        <option value="gwangju">광주</option>
+                                        <option value="ulsan">울산</option>
+                                        <option value="sejong">세종</option>
+                                    </select>
+                                </div>
+                            </span>
+                            <span class="label">결재상태</span>
+                            <span>
+                                <div class="form-group select-custom">
+                                    <select id="" class="fn-select js-basic-single">
+                                        <option value="">선택하세요</option>
+                                        <option value="seoul">서울</option>
+                                        <option value="busan">부산</option>
+                                        <option value="incheon">인천</option>
+                                        <option value="daegu">대구</option>
+                                        <option value="daejeon">대전</option>
+                                        <option value="gwangju">광주</option>
+                                        <option value="ulsan">울산</option>
+                                        <option value="sejong">세종</option>
+                                    </select>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn icon-btn search">
+                        <span>조회</span>
+                    </button>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="box type1" style="grid-column: span 2; ">
+            <div class="header">
+                <h3>신청내역<span>total 13건</span></h3>
+                <button type="button" class="btn btn-primary">신규신청</button>
+            </div>
+            <div class="body">
+
+                <div id="attendanceGrid" class="grid-wrap"></div>
+                <br><br>
+                <div id="emptyGrid" class="grid-wrap"></div>
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 연차쿼터 상세내역 모달팝업 -->
+<div class="modal " id="modal1111">
+    <div class="modal-content" style="width: 700px;">
+        <div class="modal-header">
+            <h2>연차쿼터 상세내역</h2>
+        </div>
+        <div class="modal-body">
+
+            <div id="annualGrid" class="grid-wrap"></div>
+
+            
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-normal close-btn fn-modal-close">닫기</button>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    $(document).ready(function() {
+        // 1. 기본 Select2
+        $('.fn-select').select2({
+            placeholder: '선택하세요',
+            allowClear: true
+        });
+        
+        // 선택 변경 이벤트 리스너
+        $('.js-basic-single, .js-grouped, .js-no-search').on('change', function() {
+            console.log('선택된 값:', $(this).val());
+        });
+        
+        $('.js-multiple, .js-tags').on('change', function() {
+            console.log('선택된 값들:', $(this).val());
+        });
+    });
+    
+    // 단일 선택값 조회
+    function getValue(selectId) {
+        const value = $('#' + selectId).val();
+        const text = $('#' + selectId + ' option:selected').text();
+        const resultBox = $('#result' + selectId.replace('select', ''));
+        
+        if (value) {
+            resultBox.html(
+                '<h4>✅ 선택된 값:</h4>' +
+                '<p><strong>Value:</strong> ' + value + '</p>' +
+                '<p><strong>Text:</strong> ' + text + '</p>'
+            );
+            resultBox.addClass('show');
+        } else {
+            alert('선택된 항목이 없습니다.');
+            resultBox.removeClass('show');
+        }
+    }
+
+    // Select 초기화
+    function resetSelect(selectId) {
+        $('#' + selectId).val(null).trigger('change');
+        $('#result' + selectId.replace('select', '')).removeClass('show');
+        alert('초기화되었습니다.');
+    }
+    
+    // 프로그래밍으로 값 설정
+    function setValueProgrammatically(selectId, value) {
+        $('#' + selectId).val(value).trigger('change');
+        alert('값이 설정되었습니다: ' + value);
+    }
+</script>
+</html>
