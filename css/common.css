@@ -52,7 +52,7 @@
 html {direction: ltr; height: 100%;}
 body {margin: 0; padding: 0; font-size: 100%;
 	font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-	line-height: 1.125; font-size: 14px; font-weight: 400; WindowText; background-color: Window;
+	line-height: 1.125; font-size: 14px; font-weight: 400; WindowText; background-color: Window; font-weight: 500; color: #000;
 }
 pre {-o-tab-size: 4; -moz-tab-size: 4; tab-size: 4; }
 a {display: inline-block; text-decoration: none; color: inherit; background-color: transparent; }
@@ -85,12 +85,221 @@ input.sm[type="text"], input.sm[type="search"], input.sm[type="tel"], input.sm[t
 { height: 1.20rem; font-size: 0.5rem; }
 input:read-only {background-color: #f1f3f5; }
 input:required {border: 1px solid #88066a;}
-input[type="checkbox"], input[type="radio"] {width: 1.25rem; height: 1.25rem; }
+input[type="checkbox"], input[type="radio"] {width: 18px; height: 18px; margin: 0; }
 select:not([multiple]) {height: 1.45rem; }
 select.sm:not([multiple]) {height: 1.20rem; }
 select:not([multiple]):disabled {background-color: #e9ecf0; }
 html.ltIE9 select {height: 35px; }
 textarea {-webkit-appearance: none; appearance: none; border: 1px solid #c3c3c3; border-radius: 0.10rem; padding: 0.45rem 0.45rem 0; background-color: #ffffff; }
+input[type="text"] + input[type="text"] {margin-left: 6px;}
+
+/* 기본 체크박스 숨기기 */
+input[type="checkbox"].custom-check {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  vertical-align: middle;
+  position: relative;
+}
+/* 체크 시 파란색 테두리 & 배경 */
+input[type="checkbox"].custom-check:checked {
+  background-color: #fff;
+}
+/* 체크 아이콘 표시 (가상요소 활용) */
+input[type="checkbox"].custom-check:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 6px;
+  height: 12px;
+  border: solid #427cac;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+/* Hover 효과 */
+input[type="checkbox"].custom-check:hover {
+  border-color: #007bff;
+  box-shadow: 0 0 1px rgba(0, 123, 255, 0.4);
+}
+/* 포커스 효과 (Tab 이동 시) */
+input[type="checkbox"].custom-check:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25);
+}
+
+
+/* 라디오 버튼 공통 스타일 */
+input[type="radio"].custom-radio {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+/* 선택된 상태 */
+input[type="radio"].custom-radio:checked {
+  border-color: #1e63ff; /* 파란색 테두리 */
+  background-color: #1e63ff;
+}
+
+/* 안쪽 점 */
+input[type="radio"].custom-radio:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* hover 효과 (선택 전 상태에서만) */
+input[type="radio"].custom-radio:hover:not(:checked) {
+  border-color: #1e63ff;
+  box-shadow: 0 0 0 2px rgba(30, 99, 255, 0.15);
+}
+
+/* 텍스트 정렬용 */
+.radio-label {
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+}
+.radio-label span {
+    margin-top: 1px;
+}
+
+.grid {display: grid;}
+
+.w100 {width: 100%;}
+
+.datepicker {xwidth: 134px;}
+.day {width: 90px;}
+.time {width: 90px;}
+.color-red {color:#fc0000}
+.color-blue {color:#1e88e5}
+
+.bold {font-weight:700;}
+
+.datepicker.datepicker-dropdown.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 6px;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 14px;
+    text-align: left;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip: padding-box;
+}
+.datepicker-dropdown:before {
+  content: '';
+  display: inline-block;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-top: 0;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+}
+.datepicker-dropdown:after {
+  content: '';
+  display: inline-block;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #fff;
+  border-top: 0;
+  position: absolute;
+}
+.datepicker table tr td, .datepicker table tr th {
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    border: none;
+    vertical-align: middle;
+}
+.input-daterange input {
+    text-align: left!important;
+}
+.datepicker .datepicker-switch {
+    width: 145px;
+    font-weight: 600;
+}
+.datepicker .prev, .datepicker .next {
+    font-size: 0;
+}
+.datepicker .prev::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 10px;
+    background-image: url(../images/icon_select.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px;
+    transform: rotate(90deg);
+}
+.datepicker .next::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 10px;
+    background-image: url(../images/icon_select.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px;
+    transform: rotate(270deg);
+}
+
+.center {text-align: center;}
+
+.datepicker-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 288px!important;
+}
+.datepicker-wrap input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 134px;
+    background-image: url(../images/icon_calendar.svg);
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+}
+.datepicker-wrap .input-group-addon {
+    margin-left: 0px!important;
+    margin-right: 0px!important;
+}
 
 .ellipsis {
     width: 100%;
@@ -99,13 +308,18 @@ textarea {-webkit-appearance: none; appearance: none; border: 1px solid #c3c3c3;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.fade-out {
+  opacity: 0;
+  transform: translateX(0px);
+  transition: all 0.3s ease-out;
+}
 
 .btn {
-    --btn-padding-x: 0.75rem;
-    --btn-padding-y: 0.375rem;
+    --btn-padding-x: 16px;
+    --btn-padding-y: 8px;
     --btn-font-family: ;
-    --btn-font-size: 1rem;
-    --btn-font-weight: 400;
+    --btn-font-size: 14px;
+    --btn-font-weight: 500;
     --btn-line-height: 1.5;
     --btn-color: var(--body-color);
     --btn-bg: transparent;
@@ -131,7 +345,7 @@ textarea {-webkit-appearance: none; appearance: none; border: 1px solid #c3c3c3;
     -moz-user-select: none;
     user-select: none;
     border: var(--btn-border-width) solid var(--btn-border-color);
-    border-radius: var(--btn-border-radius);
+    border-radius: 30px;
     background-color: var(--btn-bg);
     white-space: nowrap;
     transition: color .15s 
@@ -140,9 +354,12 @@ textarea {-webkit-appearance: none; appearance: none; border: 1px solid #c3c3c3;
                 ease-in-out, box-shadow .15s 
                 ease-in-out;
 }
+.btn:not(.icon-btn) {
+    min-width: 90px;
+}
 .btn-primary {
     --btn-color: #fff;
-    --btn-bg: #0d6efd;
+    --btn-bg: #0C4DA2;
     --btn-border-color: #0d6efd;
     --btn-hover-color: #fff;
     --btn-hover-bg: #0b5ed7;
@@ -156,15 +373,211 @@ textarea {-webkit-appearance: none; appearance: none; border: 1px solid #c3c3c3;
     --btn-disabled-bg: #0d6efd;
     --btn-disabled-border-color: #0d6efd;
 }
-.btn.disabled, .btn:disabled, fieldset:disabled .btn {
-    color: var(--btn-disabled-color);
-    pointer-events: none;
-    background-color: var(--btn-disabled-bg);
-    border-color: var(--btn-disabled-border-color);
-    opacity: var(--btn-disabled-opacity);
-}
-.btn:hover {
+.btn.btn-primary:hover {
     color: var(--btn-hover-color);
     background-color: var(--btn-hover-bg);
     border-color: var(--btn-hover-border-color);
 }
+
+
+.btn-normal {
+    --btn-color: #000;
+    --btn-bg: #ffff;
+    --btn-border-color: #D5D5D5;
+    --btn-border-width: 1px;
+    --btn-hover-color: #000;
+    --btn-hover-bg: #eaeaea;
+    --btn-hover-border-color: #D5D5D5;
+    --btn-focus-shadow-rgb: 49, 132, 253;
+    --btn-active-color: #000;
+    --btn-active-bg: #0a58ca;
+    --btn-active-border-color: #0a53be;
+    --btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --btn-disabled-color: #fff;
+    --btn-disabled-bg: #0d6efd;
+    --btn-disabled-border-color: #0d6efd;
+}
+.btn.btn-normal:hover {
+    color: var(--btn-hover-color);
+    background-color: var(--btn-hover-bg);
+    border-color: var(--btn-hover-border-color);
+    border-width: var(--btn-border-width);
+}
+
+
+.btn.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 4px;
+    font-weight: 600;
+}
+.btn.icon-btn:before {
+    content: "";
+    display: inline-flex;
+    align-items: center;
+    margin-right: 4px;
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.btn.icon-btn.search:before {
+    background-image: url(../images/icon_search.svg);
+}
+.btn.icon-btn.cancel:before {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/icon_cancel.svg);
+}
+.btn.icon-btn.add:before {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/icon_add.svg);
+}
+.btn.icon-btn.modify:before {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/icon_modify.svg);
+}
+.btn.icon-btn.remove:before {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/icon_remove.svg);
+}
+.btn.icon-btn.approval:before {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/icon_approval.svg);
+}
+
+
+
+
+.form-label {
+    display: flex;
+    align-items: center;
+    word-break: normal;
+}
+.form-label input[type="checkbox"], label input[type="radio"] {
+    margin-right: 8px;
+}
+.select-custom.w100 .select2-container {
+    width:100%!important;
+}
+.select-custom .select2-container {
+    width:200px!important;
+}
+.select2-container {
+    z-index: 9999;
+}
+.select-custom .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b::after{
+    transform: rotate(180deg);
+    top: 10px;
+    left: 8px;
+}
+.select-custom .select2-container--default .select2-selection--single {
+    border-radius: 0px;
+    border: 1px solid #c3c3c3!important;
+    border-radius: 0!important;
+    height: 37px!important;
+}
+.select-custom .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #000;
+    line-height: 37px!important;
+    height: 37px;
+}
+.select-custom .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 33px;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 30px;
+    background-color: #fff;
+}
+.select-custom .selection {
+    width: 100%;;
+}
+.select-custom .select2-container--default .select2-selection--single .select2-selection__clear {
+    display: none;
+}
+.select-custom .select2-container--default .select2-selection--multiple {
+    background-color: white;
+    border: 1px solid #c3c3c3;
+    border-radius: 0px;
+    cursor: text;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    position: relative;
+}
+.select-custom .select2-container .select2-selection--multiple {
+    min-height: 37px;
+    height: 37px;
+    padding: 0;
+}
+.select-custom .select2-container--default .select2-search--inline .select2-search__field {
+    margin: 0;
+    height: 100%;
+    padding: 8px;
+}
+.select-custom .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable:hover {
+    color: #000!important
+}
+.select-custom .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border: 0;
+    position: static;
+}
+.select-custom .select2-container--default .select2-selection--single .select2-selection__arrow b::after {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 10px;
+    background-image: url(../images/icon_select.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px;
+    position: absolute;
+    top: 17px;
+    left: 15px;
+    transform: translate(-50%, -50%);
+}
+
+/* 모달 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+.modal.show {
+    display: flex;
+}
+.modal-header {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.modal-body {
+    max-height: 770px;
+    overflow-y: auto;
+}
+.modal-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+}
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.modal-footer {
+    margin-top: 30px;
+    text-align: right;
+}
+.modal-close {
+    cursor: pointer;
+}
+.open-modal-btn {cursor: pointer;}
