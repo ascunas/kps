@@ -6,10 +6,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+
+<script type="text/javascript" src="js/jquery-3.7.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript" src="js/lib/combobox-autocomplete.js"></script>
+
 <link rel="icon" type="image/x-icon" href=",;images/favicon.ico">
 <link type="text/css" rel="stylesheet" href="css/common.css" />
+<link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+<link type="text/css" rel="stylesheet" href="css/combobox-autocomplete.css" />
 <link type="text/css" rel="stylesheet" href="css/style.css" />
-<script type="text/javascript" src="js/jquery-3.7.1.js"></script>
 <script type="text/javascript">
 //<![CDATA[
 /* Publishing-Div current page scripts... */
@@ -17,23 +24,253 @@
 jQuery(function() {
 	var $ = jQuery;
 
+    
+    $(document).ready(function() {
+        
+        // 신청내역 그리드
+        const sampleData = [
+            ["기안", "신규", "연차", "2025.10.10~2025.10.13", "16시간", true, "개인사정", "홍길동", "김팀장", "2025.10.13", "12345678"],
+            ["결재", "변경후", "연차(오후)", "2025.10.10 14:00~18:00", "4시간", true, "개인사정", "이영희", "박부장", "2025.10.13", "87654321"],
+            ["결재", "변경전", "연차(오전)", "2025.10.10 09:00~14:00", "4시간", true, "개인사정", "이영희", "박부장", "2025.10.13", "87654321"],
+            ["결재", "취소", "경조휴가(배우자 외조부상)", "2025.10.13~2025.10.15", "3일", true, "가족경조사", "박지훈", "김팀장", "2025.10.13", "45671234"],
+            ["반려", "신규", "병가", "2025.10.15", "8시간", false, "독감", "최민수", "이부장", "2025.10.13", "78945612"],
+            ["결재", "신규", "병가", "2025.10.15", "8시간", true, "감기", "김하늘", "박팀장", "2025.10.14", "11223344"]
+        ];
+
+        // 상태 → 라벨 HTML
+        function renderStatusLabel(status) {
+            const map = {
+                "기안": "status-draft",
+                "결재": "status-approved",
+                "반려": "status-rejected"
+            };
+            const cls = map[status] || "status-draft";
+            return gridjs.html(`<span class="status-label ${cls}">${status}</span>`);
+        }
+
+        // 첨부파일 아이콘
+        function renderFileIcon(hasFile) {
+            return hasFile ? gridjs.html(`<span class="file-icon">📎</span>`) : "";
+        }
+
+        // 근태유형 → 상세페이지 링크
+        function renderDetailLink(cell, rowIndex) {
+            const detailUrl = `/attendance-detail.html?id=${rowIndex + 1}`;
+            return gridjs.html(`<a href="${detailUrl}" class="detail-link">${cell}</a>`);
+        }
+
+        // 모든 셀에 div 래핑
+        function wrapInDiv(cell) {
+            const content = cell !== null && cell !== undefined ? cell.toString() : '';
+            return gridjs.html(`<div class="cell-wrapper">${content}</div>`);
+        }
+
+        // Grid.js 초기화
+        new gridjs.Grid({
+            columns: [
+                {
+                    name: "상태",
+                    formatter: (cell) => renderStatusLabel(cell),
+                    width: "80px",
+                    attributes: {
+                        class: "status-cell"
+                    }
+                },
+                {
+                    name: "구분",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "근태유형",
+                    formatter: (cell, row, index) => renderDetailLink(cell, index),
+                    attributes: {
+                        style: "text-align: left;"
+                    }
+                },
+                {
+                    name: "근태기간",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "일/시간",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "첨부파일",
+                    formatter: (cell) => renderFileIcon(cell),
+                    width: "90px"
+                },
+                {
+                    name: "근태사유",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "신청자",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "결재자",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "결재일",
+                    formatter: (cell) => wrapInDiv(cell)
+                },
+                {
+                    name: "결재번호",
+                    formatter: (cell) => wrapInDiv(cell)
+                }
+            ],
+            data: sampleData,
+            //search: {
+            //    enabled: true
+            //},
+            sort: true,
+            //pagination: {
+                //enabled: true,
+                //limit: 5,
+                //summary: true
+            //},
+            resizable: true,
+            autoWidth: true
+        }).render(document.getElementById("attendanceGrid"));
+    });
+
+    
+    
+    // 연차쿼터 도우넛 챠트
+    const ctx = $('#myDoughnutChart')[0].getContext('2d');
+
+    const chartOptions = {
+        layout: {
+            padding: {
+                top: 15,
+                bottom: 15
+            }
+        }
+    };
+
+    const myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['발생', '사용', '잔여'],
+            datasets: [{
+                label: '연차쿼터',
+                data: [300, 50, 100],
+                pointStyle: 'rect',
+                backgroundColor: [
+                    'rgba(12, 77, 162, 0.8)',
+                    'rgba(141, 182, 244, 0.8)',
+                    'rgba(223, 236, 253, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(12, 77, 162, 1)',
+                    'rgba(141, 182, 244, 1)',
+                    'rgba(223, 236, 253, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "82%",
+            plugins: {
+                tooltip: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    padding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#000',
+                        padding: 20,
+                        boxWidth: 10,
+                        boxHeight: 10,
+                        font: {
+                            family: 'Pretendard',
+                            size: 14,
+                            weight: '500'
+                        }
+                    },
+                },
+                title: {
+                    display: false,
+                    text: '도넛 차트 예제'
+                }
+            },
+            layout: {
+                padding: {
+                    top: 0,
+                    bottom: 0
+                }
+            }
+        }
+    });
+
 });
+
 </script>
 </head>
 <body>
 <div class="content-page">
+    <div class="page-header">
+        <h2 class="">근태신청</h2>
+        <div class="breadcrumbs">
+            <ul>
+                <li class="first">홈</li>
+                <li>ESS</li>
+                <li>근무/근태</li>
+                <li class="current">근태신청</li>
+            </ul>
+        </div>
+    </div>
     <div class="grid-layout">
         <div class="box">
             <div class="header">
-                <h3>박스제목</h3>
-                <span class="unit">단위</span>
+                <div class="title">
+                    <h3>연차쿼터</h3>
+                    <span class="unit">연차기산일 2025.10.25</span>
+                </div>
+                <span class="unit">발생 / 사용 / 잔여</span>
             </div>
             <div class="body">
                 <div class="body-wrap">
-                    <div class="" style="width: 50%">
+                    <div class="" style="width: 55%">
+                        <canvas id="myDoughnutChart" style="display: block; box-sizing: border-box; height: 50%; width: 50%;"></canvas>
+                    </div>
+                    <div class="progress-con">
                         <div class="progress">
-                            <div class="progress-wrap">
-                                <div class="progress-bar" style="width: 25%"></div>
+                            <span class="label">당해</span>
+                            <div class="progress-wrap type1">
+                                <div class="progress-bar" style="width: 85%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress">
+                            <span class="label">이월</span>
+                            <div class="progress-wrap type1">
+                                <div class="progress-bar" style="width: 45%"></div>
+                                <div class="progress-data">
+                                    <span>100</span>
+                                    <span>200</span>
+                                    <span>300</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress">
+                            <span class="label">선사용</span>
+                            <div class="progress-wrap type1">
+                                <div class="progress-bar" style="width: 0%"></div>
                                 <div class="progress-data">
                                     <span>100</span>
                                     <span>200</span>
@@ -42,43 +279,169 @@ jQuery(function() {
                             </div>
                         </div>
                     </div>
-
-                    <div class="">2</div>
                 </div>
             </div>
         </div>
 
         <div class="box">
             <div class="header">
-                <h3>박스제목2</h3>
+                <div class="title">
+                    <h3>기타 휴가쿼터</h3>
+                    <span class="unit">좌측 : 시간, 우측 : 일</span>
+                </div>
+                <span class="unit">발생 / 사용 / 잔여</span>
             </div>
-            <div class="body">
-                
+            <div class="body-wrap">
+                <div class="progress-con">
+                    <div class="progress">
+                        <span class="label">질병</span>
+                        <div class="progress-wrap type2">
+                            <div class="progress-bar" style="width: 25%"></div>
+                            <div class="progress-data">
+                                <span>100</span>
+                                <span>200</span>
+                                <span>300</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <span class="label">자녀</span>
+                        <div class="progress-wrap type2">
+                            <div class="progress-bar" style="width: 70%"></div>
+                            <div class="progress-data">
+                                <span>100</span>
+                                <span>200</span>
+                                <span>300</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <span class="label">헌혈</span>
+                        <div class="progress-wrap type">
+                            <div class="progress-bar" style="width: 10%"></div>
+                            <div class="progress-data">
+                                <span>100</span>
+                                <span>200</span>
+                                <span>300</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-con">
+                    <div class="progress">
+                        <span class="label">육아</span>
+                        <div class="progress-wrap type3">
+                            <div class="progress-bar" style="width: 50%"></div>
+                            <div class="progress-data">
+                                <span>100</span>
+                                <span>200</span>
+                                <span>300</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <span class="label">난임</span>
+                        <div class="progress-wrap type3">
+                            <div class="progress-bar" style="width: 25%"></div>
+                            <div class="progress-data">
+                                <span>10</span>
+                                <span>20</span>
+                                <span>30</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress">
+                        <span class="label">가족</span>
+                        <div class="progress-wrap type3">
+                            <div class="progress-bar" style="width: 25%"></div>
+                            <div class="progress-data">
+                                <span>100</span>
+                                <span>200</span>
+                                <span>300</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="box" style="grid-column: span 2; ">
-            <div class="header">
-                <h3>그리드</h3>
-            </div>
             <div class="body">
-                <input type="text" >
-                <input type="text" value="disabled" disabled>
-                <input type="text" value="readonly" readonly>
-
-                <div class="progress">
-                    <div class="progress-wrap">
-                        <div class="progress-bar" style="width: 25%"></div>
-                        <div class="progress-data">
-                            <span>100</span>
-                            <span>200</span>
-                            <span>300</span>
+                <div class="form-wrap">
+                    <div class="form-grid-search">
+                        <div class="form">
+                            <span class="label">신청일</span>
+                            <span><input type="text" ></span>
+                            <span class="label">휴무유형</span> 
+                            <span>
+                                <div class="combobox combobox-list">
+                                    <div class="group">
+                                        <input id="cb1-input" class="cb_edit" type="text">
+                                        <button type="button" id="cb1-button" tabindex="-1" >
+                                        <svg width="18" height="16" aria-hidden="true" focusable="false" style="forced-color-adjust: auto">
+                                            <polygon class="arrow" stroke-width="0" fill-opacity="0.75" fill="currentcolor" points="3,6 15,6 9,14"></polygon>
+                                        </svg>
+                                    </button>
+                                    </div>
+                                        <ul id="cb1-listbox" class="list-box" role="listbox" aria-label="Previous Searches">
+                                            <li id="lb1-01" role="option">weather</li>
+                                            <li id="lb1-02" role="option">salsa recipes</li>
+                                            <li id="lb1-03" role="option">cheap flights to NY</li>
+                                            <li id="lb1-04" role="option">dictionary</li>
+                                            <li id="lb1-05" role="option">baseball scores</li>
+                                            <li id="lb1-06" role="option">hotels in NY</li>
+                                            <li id="lb1-07" role="option">mortgage calculator</li>
+                                            <li id="lb1-08" role="option">restaurants near me</li>
+                                            <li id="lb1-09" role="option">free games</li>
+                                            <li id="lb1-10" role="option">gas prices</li>
+                                            <li id="lb1-11" role="option">classical music</li>
+                                        </ul>
+                                  </div>
+                            </span>
+                            <span class="label">결재상태</span>
+                            <span>
+                                <div class="combobox combobox-list">
+                                    <div class="group">
+                                        <input id="cb1-input" class="cb_edit" type="text">
+                                        <button type="button" id="cb1-button" tabindex="-1" >
+                                        <svg width="18" height="16" aria-hidden="true" focusable="false" style="forced-color-adjust: auto">
+                                            <polygon class="arrow" stroke-width="0" fill-opacity="0.75" fill="currentcolor" points="3,6 15,6 9,14"></polygon>
+                                        </svg>
+                                    </button>
+                                    </div>
+                                        <ul id="cb1-listbox" class="list-box" role="listbox" aria-label="Previous Searches">
+                                            <li id="lb1-01" role="option">weather</li>
+                                            <li id="lb1-02" role="option">salsa recipes</li>
+                                            <li id="lb1-03" role="option">cheap flights to NY</li>
+                                            <li id="lb1-04" role="option">dictionary</li>
+                                            <li id="lb1-05" role="option">baseball scores</li>
+                                            <li id="lb1-06" role="option">hotels in NY</li>
+                                            <li id="lb1-07" role="option">mortgage calculator</li>
+                                            <li id="lb1-08" role="option">restaurants near me</li>
+                                            <li id="lb1-09" role="option">free games</li>
+                                            <li id="lb1-10" role="option">gas prices</li>
+                                            <li id="lb1-11" role="option">classical music</li>
+                                        </ul>
+                                  </div>
+                            </span>
                         </div>
                     </div>
+                    <button type="button" class="btn icon-btn search">
+                        <span>조회</span>
+                    </button>
                 </div>
+                
+            </div>
+        </div>
 
-                <button type="button" class="btn btn-primary">Base class</button>
-                <button type="button" class="btn btn-primary" disabled>Base class</button>
+        <div class="box type1" style="grid-column: span 2; ">
+            <div class="header">
+                <h3>신청내역<span>total 13건</span></h3>
+                <button type="button" class="btn btn-primary">신규신청</button>
+            </div>
+            <div class="body">
+
+                <div id="attendanceGrid" class="grid-wrap"></div>
                 
             </div>
         </div>
@@ -87,4 +450,6 @@ jQuery(function() {
 </div>
 
 </body>
+<script>
+</script>
 </html>
