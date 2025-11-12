@@ -190,7 +190,6 @@ input[type="radio"].custom-radio:hover:not(:checked) {
 
 .w100 {width: 100%;}
 
-.datepicker {xwidth: 134px;}
 .day {width: 90px;}
 .time {width: 90px;}
 .color-red {color:#fc0000}
@@ -218,6 +217,7 @@ input[type="radio"].custom-radio:hover:not(:checked) {
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
     background-clip: padding-box;
+    z-index: 9999 !important;
 }
 .datepicker-dropdown:before {
   content: '';
@@ -466,9 +466,19 @@ input[type="radio"].custom-radio:hover:not(:checked) {
 }
 .select-custom .select2-container {
     width:200px!important;
+    text-align: left;
 }
-.select2-container {
-    z-index: 9999;
+.select-custom .select2-container {
+    z-index: 999;
+}
+.select-custom .time + .select2-container {
+    width:80px!important;
+}
+.select-custom .color-blue + .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #0d6efd;
+}
+.select-custom .color-red + .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #fc0000;
 }
 .select-custom .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b::after{
     transform: rotate(180deg);
@@ -479,12 +489,12 @@ input[type="radio"].custom-radio:hover:not(:checked) {
     border-radius: 0px;
     border: 1px solid #c3c3c3!important;
     border-radius: 0!important;
-    height: 37px!important;
+    height: 38px!important;
 }
 .select-custom .select2-container--default .select2-selection--single .select2-selection__rendered {
     color: #000;
-    line-height: 37px!important;
-    height: 37px;
+    line-height: 38px!important;
+    height: 38px;
 }
 .select-custom .select2-container--default .select2-selection--single .select2-selection__arrow {
     height: 33px;
@@ -492,7 +502,7 @@ input[type="radio"].custom-radio:hover:not(:checked) {
     top: 2px;
     right: 2px;
     width: 30px;
-    background-color: #fff;
+    background-color: transparent;
 }
 .select-custom .selection {
     width: 100%;;
