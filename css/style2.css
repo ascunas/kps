@@ -1,15 +1,15 @@
 @charset "UTF-8";
 
 body {
-    background-color: #f2f2f2;
+    background-color: #fff;
 }
 
 .content-page {
-    width: 1350px;
+    width: 1330px;
     height:100%;
     margin: 0 auto;
-    padding: 20px 0;
-    background-color: #f2f2f2;
+    padding: 10px 0;
+    background-color: #fff;
 }
 .content-page > .page-header {
     display: flex;
@@ -60,8 +60,11 @@ body {
     position: relative;
     padding: 25px;
     border-radius: 8px;
-    box-shadow: 0 2px 2px rgb(0, 0, 0, 10%);
+    box-shadow: 0 2px 2px rgb(0, 0, 50, 10%);
     background-color: #fff;
+    //border: 1px solid #f2f6f7;
+    border: 1px solid #ddd;
+    
 }
 .box .header {
     display: flex;
@@ -257,6 +260,12 @@ body {
     font-weight: bold;
     border-top: 0px solid #99b3ff;
   }
+  #etcGrid tr.total-row td {
+    background-color: #d7e6ff;
+    font-weight: bold;
+    border-top: 0px solid #99b3ff;
+  }
+  
 th.gridjs-th, td.gridjs-td, th.status-cell {
     border: 1px solid #f5f5f5;
     box-sizing: border-box;
@@ -270,7 +279,7 @@ th.gridjs-th, td.gridjs-td, th.status-cell {
 }
 th.gridjs-th {
     text-align: center!important;
-    background-color: #FCFCFC;
+    background-color: #F2F2F2;
     height: 37px;
 }
 td.gridjs-td {
@@ -302,7 +311,12 @@ td.gridjs-td {
 }
 th.gridjs-th-sort, th.status-cell {
     cursor: pointer;
-    background-color: #FCFCFC;
+    background-color: #F2F2F2;
+    text-align: center!important;
+}
+
+td.gridjs-notfound {
+	height: 37px;
 }
 
 /* 상태 라벨 색상 */
@@ -358,6 +372,7 @@ td.status-cell {
     text-overflow: ellipsis;
     text-align: center;
     width: calc(100% - 15px);
+    line-height: 30px;
 }
 .cell-wrapper {
     display: block;
@@ -400,6 +415,18 @@ text-decoration: underline;
 #attendanceGrid { margin-top: 10px; }
 
 
+ul[role="listbox"], .list-box {
+    left: 0;
+    top: 38px;
+    width: 100%;
+    font-size: 14px;
+    z-index: 1;
+}
+ul[role="listbox"] li[role="option"] {
+    line-height: 28px;
+    display: flex;
+    align-items: center;
+}
 .combobox.combobox-list .group {
     display: flex;
     justify-content: space-between;
@@ -508,17 +535,17 @@ text-decoration: underline;
 .grid-table th {font-weight: 600; }
 
 .grid-table.type1> *> table,
-.grid-table.type1> table {border: 1px solid #c3c3c3; border-width: 1px 0; width: 100%; text-align: center; line-height: 1.15; background-color: #ffffff; }
+.grid-table.type1> table {border: 1px solid #f5f5f5; border-width: 1px 0; width: 100%; text-align: center; line-height: 1.15; background-color: #ffffff; }
 .grid-table.type1> *> table> *> *> *,
-.grid-table.type1> table> *> *> * {border: 1px solid; padding: 4px 10px; height: 29px; border-color: #c3c3c3 #d9d8d8; }
+.grid-table.type1> table> *> *> * {border: 1px solid; padding: 4px 10px; height: 29px; border-color: #f5f5f5 #f5f5f5; }
 .grid-table.type1> *> table> *> *> *,
 .grid-table.type1> table> *> *> * {border-width: 1px 1.1px 0; word-break: break-all; vertical-align: middle; }
 .grid-table.type1> *> table> thead> *> *,
-.grid-table.type1> table> thead> *> * {padding: 1px 10px; border-width: 0 1.1px 1px; text-align: center; background-color: #eaecf0; word-break: keep-all; vertical-align: middle; }
+.grid-table.type1> table> thead> *> * {padding: 1px 10px; border-width: 0 1.1px 1px; text-align: center; background-color: #F2F2F2; word-break: keep-all; vertical-align: middle; }
 /* .grid-table.type1> *> table> *> *> *, .grid-table.type1> *> table> thead> *> *,
 .grid-table.type1> table> *> *> *, .grid-table.type1> table> thead> *> * {border-left: 1.1px; } */
 .grid-table.type1> *> table> thead> *:only-child> *,
-.grid-table.type1> table> thead> *:only-child> * {padding: 4px 10px; }
+.grid-table.type1> table> thead> *:only-child> * {padding: 3px 10px; }
 .grid-table.type1> *> table> tfoot> *> td,
 .grid-table.type1> table> tfoot> *> td {background-color: #f0f1f3; }
 .grid-table.type1> *> table> tfoot> *> th,
@@ -534,7 +561,7 @@ text-decoration: underline;
 .grid-table.type1> *> table> *> *> *:last-child,
 .grid-table.type1> table> *> *> *:last-child {border-right: 0 none; }
 .grid-table.type1> *> table> tbody> *:hover> *,
-.grid-table.type1> table> tbody> *:hover> * {background-color: #f9eef1; }
+.grid-table.type1> table> tbody> *:hover> * {background-color: ; }
 .grid-table.type1> *> table.no-hover> tbody> *:hover> td, .grid-table.type1> *> table> tbody> *:hover> td[rowspan],
 .grid-table.type1> table.no-hover> tbody> *:hover> td, .grid-table.type1> table> tbody> *:hover> td[rowspan] {background-color: transparent; }
 .grid-table.type1> *> table.no-hover> tbody> *:hover> th, .grid-table.type1> *> table> tbody> *:hover> th[rowspan],
@@ -559,17 +586,69 @@ text-decoration: underline;
     background-color: #e8e8e8;border-radius: 4px; padding: 4px 30px; width: 24px; height: 24px; display: flex;justify-content: center; align-items: center; margin: 0 auto; color: #000; font-weight: 600;
 }
 .flexiblework-summary.type2 {
-    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; width: 100%; text-align: center; gap: 28px 18px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr; width: 100%; text-align: center; gap: 28px 14px;
 }
 
 .chart-wrap {
     position: relative;
 }
-.chart-wrap span {
+.chart-wrap spanx {
     position: absolute;
-    top: 31%;
-    left: 45%;
-    z-index: 5;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: inline-block;
-    font-size: 19px;
+    font-size: 20px;
+}
+
+/* 추가분 */
+#doughnutLabel {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 150px;
+}
+#doughnutLabel .dLabel  {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 32px;
+    position: relative;
+}
+#doughnutLabel .colBox {
+    width: 15px;
+    height: 15px;
+}
+#doughnutLabel .colBoxTxt {
+    padding-left: 8px;
+    word-break: break-all;
+    flex: 1;
+}
+
+.chart-legend.type1 {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 13px;
+}
+.chart-legend.type1 > .dLabel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2px;
+    position: relative;
+}
+.chart-legend.type1 > .dLabel .colBoxTxt {
+    padding-left: 0!important;    
+    word-break: break-all;
+    flex: 1;
+}
+.chart-legend.type1 > .dLabel .colBoxTxt em {
+    display: block;
+}
+.chart-legend.type1 > .dLabel .colBox {
+    width: 10px!important;
+    height: 10px!important;
 }

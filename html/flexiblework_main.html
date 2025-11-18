@@ -15,11 +15,11 @@
 <script type="text/javascript" src="../js/lib/bootstrap-datepicker.ko.min.js"></script>
 <script type="text/javascript" src="../js/lib/select2.min.js"></script>
 
-<link type="text/css" rel="stylesheet" href="../css/common.css" />
+<link type="text/css" rel="stylesheet" href="../css/common2.css" />
 <link type="text/css" rel="stylesheet" href="../css/mermaid.min.css" />
 <link type="text/css" rel="stylesheet" href="../css/bootstrap-datepicker3.css" />
 <link type="text/css" rel="stylesheet" href="../css/select2.min.css" />
-<link type="text/css" rel="stylesheet" href="../css/style.css" />
+<link type="text/css" rel="stylesheet" href="../css/style2.css" />
 <script type="text/javascript">
 //<![CDATA[
 /* Publishing-Div current page scripts... */
@@ -38,15 +38,15 @@ jQuery(function() {
         widgetPositioning: { horizontal: 'auto', vertical: 'auto' }
     });
     
-    $(document).ready(function() {
-        
+    $(document).ready(function () {
+
         // 신청내역 그리드
         const sampleData = [
-            ["기안", "신규", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
-            ["저장", "취소", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
-            ["결재", "취소", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
-            ["반려", "신규", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
-            ["완료", "신규", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
+            ["", "기안", "신규", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
+            ["", "저장", "취소", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
+            ["", "결재", "취소", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
+            ["", "반려", "신규", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
+            ["", "완료", "신규", "근무시간 선택형", "Type1(30분 추가근무)", "2025.10.13", "2025.10.13", "월 09:00~18:00, 화수 09:00~18:00", "홍길동", "2025.10.13", "김팀장", "2025.10.13"],
         ];
 
         // 상태 → 라벨 HTML
@@ -54,7 +54,7 @@ jQuery(function() {
             const map = {
                 "기안": "status-draft",
                 "결재": "status-approved",
-                "반려": "status-rejected",                
+                "반려": "status-rejected",
                 "저장": "status-saved",
                 "완료": "status-completed",
             };
@@ -62,12 +62,7 @@ jQuery(function() {
             return gridjs.html(`<span class="status-label ${cls}">${status}</span>`);
         }
 
-        // 첨부파일 아이콘
-        function renderFileIcon(hasFile) {
-            return hasFile ? gridjs.html(`<span class="file-icon">📎</span>`) : "";
-        }
-
-        // 근태유형 → 상세페이지 링크
+        // 근태유형 → 상세페이지 링크 (현재는 사용 X, 필요하면 교체)
         function renderDetailLink(cell, rowIndex) {
             const detailUrl = `/attendance-detail.html?id=${rowIndex + 1}`;
             return gridjs.html(`<a href="${detailUrl}" class="detail-link">${cell}</a>`);
@@ -79,16 +74,30 @@ jQuery(function() {
             return gridjs.html(`<div class="cell-wrapper">${content}</div>`);
         }
 
+        // ✅ 공통 체크박스 formatter (Grid.js 포맷터 시그니처 맞춤)
+        function renderCheckbox(cell, row, rowIndex) {
+            return gridjs.html(`
+                <div class="cell-wrapper">
+                    <input type="checkbox" class="row-check custom-check" data-row-index="${rowIndex}" />
+                </div>
+            `);
+        }
+
         // Grid.js 초기화
         new gridjs.Grid({
             columns: [
                 {
+                    id: "select",
+                    name: gridjs.html('<input type="checkbox" id="checkAll" class="custom-check" />'),
+                    formatter: renderCheckbox,
+                    sort: false,
+                    width: "40px",
+                    attributes: { style: "text-align:center;" }
+                },
+                {
                     name: "상태",
                     formatter: (cell) => renderStatusLabel(cell),
-                    width: "80px",
-                    attributes: {
-                        class: "status-cell"
-                    }
+                    width: "80px"
                 },
                 {
                     name: "구분",
@@ -98,9 +107,6 @@ jQuery(function() {
                     name: "근무유형",
                     formatter: (cell) => wrapInDiv(cell)
                     //formatter: (cell, row, index) => renderDetailLink(cell, index),
-                    //attributes: {
-                    //    style: "text-align: left;"
-                    //}
                 },
                 {
                     name: "세부유형",
@@ -136,20 +142,11 @@ jQuery(function() {
                 }
             ],
             data: sampleData,
-            //search: {
-            //    enabled: true
-            //},
             sort: true,
-            //pagination: {
-                //enabled: true,
-                //limit: 5,
-                //summary: true
-            //},
             resizable: true,
             autoWidth: true,
-            
             language: {
-            noRecordsFound: "데이터가 없습니다.",   // 데이터 없을 때 표시 문구
+                noRecordsFound: "데이터가 없습니다.",
             },
             className: {
                 table: 'my-custom-table',
@@ -159,13 +156,259 @@ jQuery(function() {
             }
         }).render(document.getElementById("attendanceGrid"));
 
+        // ✅ 체크박스 토글 (함수 밖, 한 번만)
+        $(document).on("change", "#checkAll", function () {
+            $(".row-check").prop("checked", $(this).prop("checked"));
+        });
 
-        // 공통 셀 래퍼 함수
-        function wrapCell(content) {
-            return gridjs.html(`<div class="cell-wrapper">${content ?? ""}</div>`);
-        }
+        $(document).on("change", ".row-check", function () {
+            const total = $(".row-check").length;
+            const checked = $(".row-check:checked").length;
+            $("#checkAll").prop("checked", total > 0 && total === checked);
+        });
 
     });
+
+
+    // =====================
+    // 챠트 공통 옵션
+    // =====================
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "75%",
+        plugins: {
+            tooltip: {
+                backgroundColor: "#000",
+                bodyColor: "#858796",
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                padding: 15,
+                displayColors: false,
+                caretPadding: 10,
+            },
+            legend: {
+                position: 'right',
+                labels: {
+                    color: '#000',
+                    padding: 20,
+                    boxWidth: 10,
+                    boxHeight: 10,
+                    font: {
+                        family: 'Pretendard',
+                        size: 12,
+                        weight: '500'
+                    }
+                },
+            },
+            centerText: {
+                text: "777",      // 각 차트에서 개별적으로 설정함
+                color: "#000",
+                fontSize: 24
+            },
+            title: {
+                display: false
+            }
+        },
+        layout: {
+            padding: {
+                top: 5,
+                bottom: 5,
+                left: 0,
+                right: 0
+            }
+        }
+    };
+
+    // ============================
+    // 도넛 중앙 텍스트 플러그인
+    // ============================
+    const centerTextPlugin = {
+        id: 'centerText',
+        afterDraw(chart, args, options) {
+            const { ctx } = chart;
+            const meta = chart.getDatasetMeta(0);
+
+            if (!meta || !meta.data.length) return;
+
+            const centerX = meta.data[0].x;
+            const centerY = meta.data[0].y;
+
+            ctx.save();
+            ctx.font = `bold ${options.fontSize || 26}px Pretendard`;
+            ctx.fillStyle = options.color || '#000';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(options.text || '', centerX, centerY);
+            ctx.restore();
+        }
+    };
+
+
+    // ============================
+    // 값 표시 플러그인
+    // ============================
+    const ChartDataLabels = {
+        id: 'ChartDataLabels',
+        afterDraw(chart, args, options) {
+
+            $.each(chart.data.datasets, function(i, dataset) {
+                $.each(chart.getDatasetMeta(i).data, function(index, datapoint) {
+
+                    // 0보다 큰 값만 표시
+                    if(!chart._hiddenIndices[index] && parseInt(dataset.data[index]) > 0) {
+
+                        const ctx = chart.ctx;
+                        const pos = datapoint.tooltipPosition();
+                        let x = pos.x;
+                        let y = pos.y;
+
+                        // 차트의 중심 좌표 기준
+                        let centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+                        let centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+
+                        // 선이 나가는 방향
+                        let xLine = x >= centerX ? x + 15 : x - 15;
+                        let yLine = y >= centerY ? y + 15 : y - 15;
+                        let extraLine = x >= centerX ? 5 : -5;
+
+                        // 1) 선 그리기
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(xLine, yLine);
+                        ctx.lineTo(xLine + extraLine, yLine);
+                        ctx.strokeStyle = 'rgb(0, 0, 0)';
+                        ctx.stroke();
+
+                        // 2) 텍스트 정렬
+                        let textPosition = x >= centerX ? 'left' : 'right';
+                        let offset = x >= centerX ? 5 : -5;
+
+                        ctx.font = '12px Pretendard';
+                        ctx.textAlign = textPosition;
+                        ctx.textBaseline = 'middle';
+                        ctx.fillStyle = 'rgb(0,0,0)';
+
+                        // 3) 값 출력
+                        ctx.fillText(dataset.data[index], xLine + extraLine + offset, yLine);
+                    }
+                });
+            });
+        }
+    };
+
+    Chart.register(ChartDataLabels);
+
+    Chart.register(centerTextPlugin);
+
+
+    // =====================
+    // 1번 차트
+    // =====================
+    const ctx = $('#myDoughnutChart')[0].getContext('2d');
+
+    const myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['발생', '사용', '잔여'],
+            datasets: [{
+                label: '연차쿼터',
+                data: [300, 50, 100],
+                pointStyle: 'rect',
+                backgroundColor: [
+                    'rgba(12, 77, 162, 0.8)',
+                    'rgba(141, 182, 244, 0.8)',
+                    'rgba(223, 236, 253, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(12, 77, 162, 1)',
+                    'rgba(141, 182, 244, 1)',
+                    'rgba(223, 236, 253, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            ...chartOptions,
+            plugins: {
+                ...chartOptions.plugins,
+                centerText: {
+                    text: "KPS",    // 가운데 텍스트
+                    color: "#0C4DA2",
+                    fontSize: 18
+                },
+                tooltip: {
+                    enabled: false 
+                },
+                legend: {
+                    display: false 
+                },
+                ChartDataLabels: {
+                    offset: 30,
+                    arrowSize: 7,
+                    lineColor: "#333",
+                    textColor: "#000",
+                    fontSize: 14,
+                    textOffsetX: 15
+                }
+            }
+        }
+    });
+
+
+    // =====================
+    // 2번 차트 (같은 옵션 적용)
+    // =====================
+    const ctx2 = $('#myDoughnutChart2')[0].getContext('2d');
+
+    const myDoughnutChart2 = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: ['발생', '사용', '잔여'],
+            datasets: [{
+                label: '연차쿼터',
+                data: [200, 40, 60],
+                pointStyle: 'rect',
+                backgroundColor: [
+                    'rgba(12, 77, 162, 0.8)',
+                    'rgba(141, 182, 244, 0.8)',
+                    'rgba(223, 236, 253, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(12, 77, 162, 1)',
+                    'rgba(141, 182, 244, 1)',
+                    'rgba(223, 236, 253, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            ...chartOptions,
+            plugins: {
+                ...chartOptions.plugins,
+                centerText: {
+                    text: "소속",
+                    color: "#0C4DA2",
+                    fontSize: 18
+                },
+                tooltip: {
+                    enabled: false 
+                },
+                legend: {
+                    display: false 
+                },
+                ChartDataLabels: {
+                    offset: 30,
+                    arrowSize: 7,
+                    lineColor: "#333",
+                    textColor: "#000",
+                    fontSize: 14,
+                    textOffsetX: 15
+                }
+            }
+        }
+    });
+
 });
 
 </script>
@@ -184,64 +427,11 @@ jQuery(function() {
         </div>
     </div>
     <div class="page-layout grid">
-        <div class="box">
-            <div class="header">
-                <div class="title">
-                    <h3>유연근무제</h3>
-                    <span class="unit">근무시간 선택형 Type 1 - 30분 추가근무형</span>
-                </div>
-            </div>
-            <div class="body">
-                <div class="body-wrap">
-                    <div class="grid flexiblework-summary">
-                        <span class="item head">요일</span>
-                        <span class="week">
-                            <em>월</em>
-                        </span>
-                        <span class="week">
-                            <em>화</em>
-                        </span>
-                        <span class="week">
-                            <em>수</em>
-                        </span>
-                        <span class="week">
-                            <em>목</em>
-                        </span>
-                        <span class="week">
-                            <em>금</em>
-                        </span>
-
-                        <span class="item head">근무유형</span>
-                        <span class="item">유연근무</span>
-                        <span class="item">유연근무</span>
-                        <span class="item">유연근무</span>
-                        <span class="item">유연근무</span>
-                        <span class="item">유연근무</span>
-
-                        <span class="item head">근무시간</span>
-                        <span class="item">08:30~18:00</span>
-                        <span class="item">08:30~18:00</span>
-                        <span class="item">08:30~18:00</span>
-                        <span class="item">08:30~18:00</span>
-                        <span class="item">08:30~18:00</span>
-
-                        <span class="item head">시간</span>
-                        <span class="time">8.5</span>
-                        <span class="time">8.5</span>
-                        <span class="time">8.5</span>
-                        <span class="time">8.5</span>
-                        <span class="time">6.5</span>                        
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-
+        
         <div class="box">
             <div class="header">
                 <div class="title">
                     <h3>주간 유연근무 현황</h3>
-                    <span class="unit">간주근로 신청필요</span>
                 </div>
                 <span class="unit">
                     <div class="input-daterange input-group datepicker-wrap" id="">
@@ -294,6 +484,56 @@ jQuery(function() {
                     <span class="item time">8.5</span>
                     <span class="item time color-red">8.0</span>
                     <span class="item time color-red bold">42.0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="header">
+                <div class="title">
+                    <h3>유연근무제 사용실태</h3>
+                    <span class="unit">현재일 기준 Top3</span>
+                </div>
+            </div>
+            <div class="body">
+                <div class="body-wrap">
+                    <div class="chart-wrap" style="width: 40%">
+                        <canvas id="myDoughnutChart" class="chart" style="width: 60%;"></canvas>
+                    </div>                        
+                    <div class="chart-legend type1" style="height: 150px;">
+                        <div class="dLabel dLabel1">
+                            <span class="colBox" style="background-color: rgba(12, 77, 162, 0.8);"></span>
+                            <span class="colBoxTxt">선택형(30분)<em>50%</em></span>
+                        </div>
+                        <div class="dLabel dLabel3">
+                            <span class="colBox" style="background-color: rgba(141, 182, 244, 0.8);"></span>
+                            <span class="colBoxTxt">선택형(1시간)<em>30%</em></span>
+                        </div>
+                        <div class="dLabel dLabel2">
+                            <span class="colBox" style="background-color: rgba(223, 236, 253, 0.8);"></span>
+                            <span class="colBoxTxt">육아시간제<em>20%</em></span>
+                        </div>
+                    </div>
+                    
+
+                    <div class="chart-wrap" style="width: 40%">
+                        <canvas id="myDoughnutChart2" class="chart" style="width: 60%;"></canvas>
+                    </div>                                            
+                    <div class="chart-legend type1" style="height: 150px;">
+                        <div class="dLabel dLabel1">
+                            <span class="colBox" style="background-color: rgba(12, 77, 162, 0.8);"></span>
+                            <span class="colBoxTxt">선택형(30분)<em>50%</em></span>
+                        </div>
+                        <div class="dLabel dLabel3">
+                            <span class="colBox" style="background-color: rgba(141, 182, 244, 0.8);"></span>
+                            <span class="colBoxTxt">선택형(1시간)<em>30.5%</em></span>
+                        </div>
+                        <div class="dLabel dLabel2">
+                            <span class="colBox" style="background-color: rgba(223, 236, 253, 0.8);"></span>
+                            <span class="colBoxTxt">육아시간제<em>20%</em></span>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -358,10 +598,10 @@ jQuery(function() {
                 <h3>신청내역<span>total 13건</span></h3>
                 <div class="btn-wrap">
                     <button type="button" class="btn btn-primary">신규신청</button>
+                    <button type="button" class="btn btn-primary">결재변경</button>
                     <button type="button" class="btn btn-primary">분할신청</button>
-                    <button type="button" class="btn btn-primary">변경신청</button>
+                    <button type="button" class="btn btn-primary">근무시간변경 신청</button>
                     <button type="button" class="btn btn-primary">종료신청</button>
-                    <button type="button" class="btn btn-primary">간주근로신청</button>
                 </div>
             </div>
             <div class="body">

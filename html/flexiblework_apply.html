@@ -15,11 +15,11 @@
 <script type="text/javascript" src="../js/lib/bootstrap-datepicker.ko.min.js"></script>
 <script type="text/javascript" src="../js/lib/select2.min.js"></script>
 
-<link type="text/css" rel="stylesheet" href="../css/common.css" />
+<link type="text/css" rel="stylesheet" href="../css/common2.css" />
 <link type="text/css" rel="stylesheet" href="../css/mermaid.min.css" />
 <link type="text/css" rel="stylesheet" href="../css/bootstrap-datepicker3.css" />
 <link type="text/css" rel="stylesheet" href="../css/select2.min.css" />
-<link type="text/css" rel="stylesheet" href="../css/style.css" />
+<link type="text/css" rel="stylesheet" href="../css/style2.css" />
 <script type="text/javascript">
     jQuery(function() {
         var $ = jQuery;
@@ -57,12 +57,6 @@
         <div class="box type1">
             <div class="header">
                 <h3>신청내역</h3>
-                <div class="util-btn-wrap">
-                    <button type="button" class="btn icon-btn add open-modal-btn" data-target="modal1">신규신청</button>
-                    <button type="button" class="btn icon-btn modify open-modal-btn" data-target="modal2">변경신청</button>
-                    <button type="button" class="btn icon-btn cancel open-modal-btn" data-target="modal3">취소신청</button>
-                    <button type="button" class="btn icon-btn remove fn-row-remove">삭제</button>
-                </div>
             </div>
             <div class="body">
                 <div class="form-table type1">
@@ -76,7 +70,7 @@
                                 <th scope="row">대상자</th>
                                 <td>
                                     <input type="text" name="" placeholder="" value="" class="" disabled="disabled">
-                                    <span>정보시스템부</span>
+                                    <span>(10000001, 과장, 정보시스템부)</span>
                                 </td>
                                 <th scope="row">신청번호</th>
                                 <td>
@@ -107,10 +101,13 @@
                                         <select id="" class="fn-select js-basic-single">
                                             <option value="">선택하세요</option>
                                             <option value="seoul">육아시간제</option>
+                                             <option value="seoul">육아시간제</option>
+                                              <option value="seoul">육아시간제</option>
                                         </select>
                                         <select id="" class="fn-select js-basic-single" disabled="disabled">
                                             <option value="">선택하세요</option>
                                             <option value="seoul">육아시간제</option>
+                                             <option value="seoul">시차근무제</option>
                                         </select>
                                     </div>
                                 </td>
@@ -125,7 +122,7 @@
             </div>
         </div>
 
-        <div class="box type1">
+        <div class="box type1" style="display: none;">
             <div class="header">
                 <h3>신청내역</h3>
                 <div class="util-btn-wrap">
@@ -142,7 +139,19 @@
 
         <div class="box type1">
             <div class="header">
+                <h3>자녀별 현황</h3>
+            </div>
+            <div class="body">
+                <div id="approvalGrid" class="grid-wrap"></div>
+            </div>
+        </div>
+
+        <div class="box type1">
+            <div class="header">
                 <h3>유연근무 내역</h3>
+                <div class="util-btn-wrap">
+                    <button type="button" class="btn icon-btn all-apply">일괄적용</button>
+                </div>
             </div>
             <div class="body">
                 <div class="grid-table type1">
@@ -450,18 +459,6 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-
-        <div class="box type1">
-            <div class="header">
-                <h3>결재라인</h3>
-                <div class="util-btn-wrap">
-                    <button type="button" class="btn icon-btn approval">결재선 지정</button>
-                </div>
-            </div>
-            <div class="body">
-                <div id="approvalGrid" class="grid-wrap"></div>
             </div>
         </div>
 

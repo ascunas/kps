@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* Import Rules */
-@import url("../css/reset.css");
+@import url("../css/reset2.css");
 @import url("../css/pretendard.css");
 
 :root {
@@ -449,7 +449,11 @@ input[type="radio"].custom-radio:hover:not(:checked) {
     height: 24px;
     background-image: url(../images/icon_approval.svg);
 }
-
+.btn.icon-btn.all-apply:before {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/icon_all_apply.svg);
+}
 
 
 
