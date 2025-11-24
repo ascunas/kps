@@ -573,3 +573,160 @@ text-decoration: underline;
     display: inline-block;
     font-size: 19px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===============================
+   근태 타입별 공통 변수 정의
+   =============================== */
+:root {
+    /* type01: 연차 */
+    --event01-bg: #a2a9e2;
+    --event01-border: #8189cc;
+
+    /* type02: 질병 */
+    --event02-bg: #A0D468;
+    --event02-border: #8CC152;
+
+    /* type03: 헌혈 */
+    --event03-bg: #4FC1E9;
+    --event03-border: #3BAFDA;
+
+    /* type04: 육아 */
+    --event04-bg: #ebbc7e;
+    --event04-border: #d1a060;
+
+    /* type05: 경조 */
+    --event05-bg: #df8bd3;
+    --event05-border: #cf6ec1;
+
+    /* type06: 조퇴 */
+    --event06-bg: #ee4a8e;
+    --event06-border: #da2a73;
+}
+
+/* 연차 type01 */
+.event-type01,
+.fc-v-event.event-type01 {
+    background-color: var(--event01-bg) !important;
+    border-color: var(--event01-border) !important;
+}
+
+/* 질병 type02 */
+.event-type02,
+.fc-v-event.event-type02 {
+    background-color: var(--event02-bg) !important;
+    border-color: var(--event02-border) !important;
+}
+
+/* 헌혈 type03 */
+.event-type03,
+.fc-v-event.event-type03 {
+    background-color: var(--event03-bg) !important;
+    border-color: var(--event03-border) !important;
+}
+
+/* 육아 type04 */
+.event-type04,
+.fc-v-event.event-type04 {
+    background-color: var(--event04-bg) !important;
+    border-color: var(--event04-border) !important;
+}
+
+/* 경조 type05 */
+.event-type05,
+.fc-v-event.event-type05 {
+    background-color: var(--event05-bg) !important;
+    border-color: var(--event05-border) !important;
+}
+
+/* 조퇴 type06 */
+.event-type06,
+.fc-v-event.event-type06 {
+    background-color: var(--event06-bg) !important;
+    border-color: var(--event06-border) !important;
+}
+
+/* ===============================
+   월간(dayGrid) dot 이벤트는 색상 미적용
+   =============================== */
+.fc-daygrid-dot-event[class*="event-type"] {
+    background-color: inherit !important;
+    border-color: inherit !important;
+}
+
+
+/* 일정목록 type별 DOT 색상 */
+
+.fc-daygrid-dot-event[class*="event-type"] {
+    background-color: inherit !important;
+    border-color: inherit !important;
+}
+.fc-daygrid-dot-event .fc-daygrid-event-dot {
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+.personal-calendar .fc-listMonth-view tr {
+    background-color: inherit !important;
+    border-color: inherit !important;
+}
+.personal-calendar .fc-listMonth-view tr td {
+    vertical-align: middle;
+}
+.personal-calendar .fc-listMonth-view .fc-list-event-dot {
+    border-width: 8px;
+    border-style: solid;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+/* ===============================
+   근태 목록 타입별 공통 변수 정의
+   =============================== */
+:root {
+    --event01: #a2a9e2;/* type01: 연차 */
+    --event02: #A0D468;/* type02: 질병 */
+    --event03: #4FC1E9;/* type03: 헌혈 */
+    --event04: #ebbc7e;/* type04: 육아 */
+    --event05: #df8bd3;/* type05: 경조 */
+    --event06: #da2a73;/* type06: 조퇴 */
+}
+
+.personal-calendar .fc-listMonth-view .event-type01 .fc-list-event-dot,
+.fc-daygrid-dot-event.event-type01 .fc-daygrid-event-dot {
+    border-color: var(--event01);
+}
+.personal-calendar .fc-listMonth-view .event-type02 .fc-list-event-dot,
+.fc-daygrid-dot-event.event-type01 .fc-daygrid-event-dot {
+    border-color: var(--event02);
+}
+.personal-calendar .fc-listMonth-view .event-type03 .fc-list-event-dot,
+.fc-daygrid-dot-event.event-type01 .fc-daygrid-event-dot {
+    border-color: var(--event03);
+}
+.personal-calendar .fc-listMonth-view .event-type04 .fc-list-event-dot,
+.fc-daygrid-dot-event.event-type01 .fc-daygrid-event-dot {
+    border-color: var(--event04);
+}
+.personal-calendar .fc-listMonth-view .event-type05 .fc-list-event-dot,
+.fc-daygrid-dot-event.event-type01 .fc-daygrid-event-dot {
+    border-color: var(--event05);
+}
+.personal-calendar .fc-listMonth-view .event-type06 .fc-list-event-dot,
+.fc-daygrid-dot-event.event-type01 .fc-daygrid-event-dot {
+    border-color: var(--event06);
+}
+

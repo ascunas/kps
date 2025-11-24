@@ -62,7 +62,6 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 2px rgb(0, 0, 50, 10%);
     background-color: #fff;
-    //border: 1px solid #f2f6f7;
     border: 1px solid #ddd;
     
 }
@@ -652,3 +651,253 @@ ul[role="listbox"] li[role="option"] {
     width: 10px!important;
     height: 10px!important;
 }
+
+
+
+
+
+.day-worktime {
+  position: absolute;
+  font-size: 12px;
+  color: #444;
+  font-weight: 600;
+  padding-left: 6px;
+  padding-top: 4px;
+}
+
+/* 날짜 숫자보다 위에 배치 */
+.fc-daygrid-day-top {
+  display: flex;
+  flex-direction: column;
+}
+.day-worktime {
+  order: -1;
+}
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   FullCalendar 근태 항목 TYPE별 컬러 공통 변수
+   ========================================================= */
+:root {
+    --event-type01-bg: #a2a9e2;
+    --event-type01-border: #8189cc;
+
+    --event-type02-bg: #A0D468;
+    --event-type02-border: #8CC152;
+
+    --event-type03-bg: #4FC1E9;
+    --event-type03-border: #3BAFDA;
+
+    --event-type04-bg: #ebbc7e;
+    --event-type04-border: #d1a060;
+
+    --event-type05-bg: #df8bd3;
+    --event-type05-border: #cf6ec1;
+
+    --event-type06-bg: #ee4a8e;
+    --event-type06-border: #da2a73;
+
+    --event-type07-bg: #7ed957;
+    --event-type07-border: #6ac44a;
+
+    --event-type08-bg: #3dd6c7;
+    --event-type08-border: #2fb9ab;
+
+    --event-type09-bg: #7bb7ff;
+    --event-type09-border: #5f9ef1;
+
+    --event-type10-bg: #365eee;
+    --event-type10-border: #2d4bc7;
+
+    --event-type11-bg: #233a82;
+    --event-type11-border: #182a61;
+
+    --event-type12-bg: #caa8ff;
+    --event-type12-border: #af85f2;
+
+    --event-type13-bg: #9e4dff;
+    --event-type13-border: #7c33db;
+
+    --event-type14-bg: #ff6fb7;
+    --event-type14-border: #e6569e;
+
+    --event-type15-bg: #ff3c8e;
+    --event-type15-border: #d62973;
+
+    --event-type16-bg: #ff4d4d;
+    --event-type16-border: #e63c3c;
+
+    --event-type17-bg: #b8744f;
+    --event-type17-border: #9f5c3a;
+
+    --event-type18-bg: #ffa75e;
+    --event-type18-border: #e68c45;
+
+    --event-type19-bg: #d6c08d;
+    --event-type19-border: #bca97a;
+
+    --event-type20-bg: #a1a1a1;
+    --event-type20-border: #828282;
+}
+
+
+
+
+/* =========================================================
+   FullCalendar 이벤트 전체 스타일 (dayGrid, timeGrid, list)
+   ========================================================= */
+
+/* 기본: event-type 이 붙은 모든 이벤트에 color: #fff 적용 */
+.fc-event[class*="event-type"] {
+    color: #fff !important;
+    border-width: 1px !important;
+}
+
+/* 예외 처리: dayGrid 월간 DOT 이벤트에는 흰색 적용 금지 */
+.fc-daygrid-dot-event[class*="event-type"] {
+    color: inherit !important;
+}
+
+/* 예외 처리: dayGrid 월간 DOT 이벤트에는 흰색 적용 금지 */
+.fc-daygrid-dot-event[class*="event-type"] {
+    color: inherit !important;
+}
+
+/* 시간표 (week/day view) - v-event */
+.fc-v-event[class*="event-type"] {
+    color: #fff !important;
+}
+
+/* Month view 점(DOT) 초기화 */
+.fc-daygrid-dot-event[class*="event-type"] {
+    background-color: inherit !important;
+    border-color: inherit !important;
+}
+
+/* DOT 크기 */
+.fc-daygrid-dot-event .fc-daygrid-event-dot {
+    border-width: 6px;
+    border-style: solid;
+    border-radius: 50%;
+}
+
+
+/* ================================
+   LIST VIEW (fc-list-event)
+   배경색 사용 금지 + 텍스트 검정색
+===================================*/
+
+/* list 일정 전체 배경 제거 */
+.fc-list-event[class*="event-type"] {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: #000 !important; /* 텍스트 항상 검정 */
+}
+
+/* 리스트에서 DOT(border)만 컬러 적용 */
+.fc-list-event .fc-list-event-dot {
+    border-width: 6px;
+    border-style: solid;
+    border-radius: 50%;
+    display: flex;
+}
+/* 월간 달력에서 DOT border 두께 4px */
+.fc-dayGridMonth-view .fc-daygrid-event-dot {
+    border-width: 4px !important;
+}
+.fc .fc-list-table td {
+    vertical-align: middle;
+}
+
+/* ================================
+   event-type01 ~ event-type20
+   전체 FullCalendar 스타일 매핑
+   ================================ */
+
+.event-type01 { background-color: var(--event-type01-bg) !important; border-color: var(--event-type01-border) !important; }
+.fc-daygrid-dot-event.event-type01 .fc-daygrid-event-dot,
+.fc-list-event.event-type01 .fc-list-event-dot { border-color: var(--event-type01-border) !important; }
+
+.event-type02 { background-color: var(--event-type02-bg) !important; border-color: var(--event-type02-border) !important; }
+.fc-daygrid-dot-event.event-type02 .fc-daygrid-event-dot,
+.fc-list-event.event-type02 .fc-list-event-dot { border-color: var(--event-type02-border) !important; }
+
+.event-type03 { background-color: var(--event-type03-bg) !important; border-color: var(--event-type03-border) !important; }
+.fc-daygrid-dot-event.event-type03 .fc-daygrid-event-dot,
+.fc-list-event.event-type03 .fc-list-event-dot { border-color: var(--event-type03-border) !important; }
+
+.event-type04 { background-color: var(--event-type04-bg) !important; border-color: var(--event-type04-border) !important; }
+.fc-daygrid-dot-event.event-type04 .fc-daygrid-event-dot,
+.fc-list-event.event-type04 .fc-list-event-dot { border-color: var(--event-type04-border) !important; }
+
+.event-type05 { background-color: var(--event-type05-bg) !important; border-color: var(--event-type05-border) !important; }
+.fc-daygrid-dot-event.event-type05 .fc-daygrid-event-dot,
+.fc-list-event.event-type05 .fc-list-event-dot { border-color: var(--event-type05-border) !important; }
+
+.event-type06 { background-color: var(--event-type06-bg) !important; border-color: var(--event-type06-border) !important; }
+.fc-daygrid-dot-event.event-type06 .fc-daygrid-event-dot,
+.fc-list-event.event-type06 .fc-list-event-dot { border-color: var(--event-type06-border) !important; }
+
+.event-type07 { background-color: var(--event-type07-bg) !important; border-color: var(--event-type07-border) !important; }
+.fc-daygrid-dot-event.event-type07 .fc-daygrid-event-dot,
+.fc-list-event.event-type07 .fc-list-event-dot { border-color: var(--event-type07-border) !important; }
+
+.event-type08 { background-color: var(--event-type08-bg) !important; border-color: var(--event-type08-border) !important; }
+.fc-daygrid-dot-event.event-type08 .fc-daygrid-event-dot,
+.fc-list-event.event-type08 .fc-list-event-dot { border-color: var(--event-type08-border) !important; }
+
+.event-type09 { background-color: var(--event-type09-bg) !important; border-color: var(--event-type09-border) !important; }
+.fc-daygrid-dot-event.event-type09 .fc-daygrid-event-dot,
+.fc-list-event.event-type09 .fc-list-event-dot { border-color: var(--event-type09-border) !important; }
+
+.event-type10 { background-color: var(--event-type10-bg) !important; border-color: var(--event-type10-border) !important; }
+.fc-daygrid-dot-event.event-type10 .fc-daygrid-event-dot,
+.fc-list-event.event-type10 .fc-list-event-dot { border-color: var(--event-type10-border) !important; }
+
+.event-type11 { background-color: var(--event-type11-bg) !important; border-color: var(--event-type11-border) !important; }
+.fc-daygrid-dot-event.event-type11 .fc-daygrid-event-dot,
+.fc-list-event.event-type11 .fc-list-event-dot { border-color: var(--event-type11-border) !important; }
+
+.event-type12 { background-color: var(--event-type12-bg) !important; border-color: var(--event-type12-border) !important; }
+.fc-daygrid-dot-event.event-type12 .fc-daygrid-event-dot,
+.fc-list-event.event-type12 .fc-list-event-dot { border-color: var(--event-type12-border) !important; }
+
+.event-type13 { background-color: var(--event-type13-bg) !important; border-color: var(--event-type13-border) !important; }
+.fc-daygrid-dot-event.event-type13 .fc-daygrid-event-dot,
+.fc-list-event.event-type13 .fc-list-event-dot { border-color: var(--event-type13-border) !important; }
+
+.event-type14 { background-color: var(--event-type14-bg) !important; border-color: var(--event-type14-border) !important; }
+.fc-daygrid-dot-event.event-type14 .fc-daygrid-event-dot,
+.fc-list-event.event-type14 .fc-list-event-dot { border-color: var(--event-type14-border) !important; }
+
+.event-type15 { background-color: var(--event-type15-bg) !important; border-color: var(--event-type15-border) !important; }
+.fc-daygrid-dot-event.event-type15 .fc-daygrid-event-dot,
+.fc-list-event.event-type15 .fc-list-event-dot { border-color: var(--event-type15-border) !important; }
+
+.event-type16 { background-color: var(--event-type16-bg) !important; border-color: var(--event-type16-border) !important; }
+.fc-daygrid-dot-event.event-type16 .fc-daygrid-event-dot,
+.fc-list-event.event-type16 .fc-list-event-dot { border-color: var(--event-type16-border) !important; }
+
+.event-type17 { background-color: var(--event-type17-bg) !important; border-color: var(--event-type17-border) !important; }
+.fc-daygrid-dot-event.event-type17 .fc-daygrid-event-dot,
+.fc-list-event.event-type17 .fc-list-event-dot { border-color: var(--event-type17-border) !important; }
+
+.event-type18 { background-color: var(--event-type18-bg) !important; border-color: var(--event-type18-border) !important; }
+.fc-daygrid-dot-event.event-type18 .fc-daygrid-event-dot,
+.fc-list-event.event-type18 .fc-list-event-dot { border-color: var(--event-type18-border) !important; }
+
+.event-type19 { background-color: var(--event-type19-bg) !important; border-color: var(--event-type19-border) !important; }
+.fc-daygrid-dot-event.event-type19 .fc-daygrid-event-dot,
+.fc-list-event.event-type19 .fc-list-event-dot { border-color: var(--event-type19-border) !important; }
+
+.event-type20 { background-color: var(--event-type20-bg) !important; border-color: var(--event-type20-border) !important; }
+.fc-daygrid-dot-event.event-type20 .fc-daygrid-event-dot,
+.fc-list-event.event-type20 .fc-list-event-dot { border-color: var(--event-type20-border) !important; }
